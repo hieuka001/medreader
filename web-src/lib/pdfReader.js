@@ -18,7 +18,7 @@ export class PdfReader {
   async load(data) {
     this.doc = await pdfjsLib.getDocument({
       data,
-      cMapUrl: new URL('../vendor/cMap/', import.meta.url).href,
+      cMapUrl: new URL('../vendor/cmaps/', import.meta.url).href,
       cMapPacked: true,
       standardFontDataUrl: new URL('../vendor/standard_fonts/', import.meta.url).href,
     }).promise;

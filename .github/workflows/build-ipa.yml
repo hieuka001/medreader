@@ -47,6 +47,7 @@ jobs:
           grep -q "MedReader" "$APP_PATH/public/index.html" || { echo "LỖI: index.html không đúng app"; exit 1; }
           test -f "$APP_PATH/public/vendor/pdf.min.mjs" || { echo "LỖI: thiếu pdf.js"; exit 1; }
           test -f "$APP_PATH/public/lib/gloss.js" || { echo "LỖI: thiếu lib gloss"; exit 1; }
+          test -d "$APP_PATH/public/vendor/cmaps" || { echo "LỖI: thiếu cmaps pdf.js"; exit 1; }
           echo "--- Kiểm tra bridge OCR native trong binary ---"
           strings "$APP_PATH/App" | grep -m1 "MedReaderBridge" || { echo "LỖI: binary không có MedReaderBridge"; exit 1; }
           strings "$APP_PATH/App" | grep -m1 "ocrImage" || { echo "LỖI: binary không có ocrImage (Vision)"; exit 1; }

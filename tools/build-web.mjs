@@ -16,7 +16,7 @@ for (const f of ['pdf.min.mjs', 'pdf.worker.min.mjs']) {
 }
 // pdf.js standard fonts + cmaps (cần cho nhiều PDF tiếng Việt/Anh)
 const pdfRoot = join(root, 'node_modules/pdfjs-dist');
-for (const d of ['standard_fonts', 'cMap']) {
+for (const d of ['standard_fonts', 'cmaps']) {
   if (existsSync(join(pdfRoot, d))) cpSync(join(pdfRoot, d), join(vendor, d), { recursive: true });
 }
 cpSync(join(root, 'node_modules/jszip/dist/jszip.min.js'), join(vendor, 'jszip.min.js'));
