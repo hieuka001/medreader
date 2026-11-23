@@ -12,6 +12,10 @@
   --reader-font: 18px;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* QUAN TRỌNG: thuộc tính hidden phải thắng mọi display của class
+   (1.0.0 lỗi: .loading/.sheet đặt display:flex nên overlay + panel
+   luôn hiện dù có hidden — vòng xoay quay mãi không dừng). */
+[hidden] { display: none !important; }
 html, body { margin: 0; height: 100%; overscroll-behavior: none; }
 body {
   font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, sans-serif;

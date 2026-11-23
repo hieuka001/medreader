@@ -1,6 +1,6 @@
 {
   "name": "medreader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "description": "MedReader — app đọc sách iOS (PDF/EPUB/TXT) tích hợp dịch Gemini kiểu MedGloss, OCR, highlight, ghi chú",

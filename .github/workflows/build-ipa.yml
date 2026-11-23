@@ -48,6 +48,7 @@ jobs:
           test -f "$APP_PATH/public/vendor/pdf.min.mjs" || { echo "LỖI: thiếu pdf.js"; exit 1; }
           test -f "$APP_PATH/public/lib/gloss.js" || { echo "LỖI: thiếu lib gloss"; exit 1; }
           test -d "$APP_PATH/public/vendor/cmaps" || { echo "LỖI: thiếu cmaps pdf.js"; exit 1; }
+          grep -q "display: none !important" "$APP_PATH/public/styles.css" || { echo "LỖI: styles.css thiếu rule [hidden] (lỗi xoay mãi 1.0.0)"; exit 1; }
           echo "--- Kiểm tra bridge OCR native trong binary ---"
           strings "$APP_PATH/App" | grep -m1 "MedReaderBridge" || { echo "LỖI: binary không có MedReaderBridge"; exit 1; }
           strings "$APP_PATH/App" | grep -m1 "ocrImage" || { echo "LỖI: binary không có ocrImage (Vision)"; exit 1; }
