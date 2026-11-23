@@ -49,7 +49,8 @@ jobs:
           test -f "$APP_PATH/public/lib/gloss.js" || { echo "LỖI: thiếu lib gloss"; exit 1; }
           echo "--- Kiểm tra bridge OCR native trong binary ---"
           strings "$APP_PATH/App" | grep -m1 "MedReaderBridge" || { echo "LỖI: binary không có MedReaderBridge"; exit 1; }
-          strings "$APP_PATH/App" | grep -m1 "OCR tiếng Việt cần iOS 16" || { echo "LỖI: binary không có ocrImage (Vision)"; exit 1; }
+          strings "$APP_PATH/App" | grep -m1 "ocrImage" || { echo "LỖI: binary không có ocrImage (Vision)"; exit 1; }
+          strings "$APP_PATH/App" | grep -m1 "VNRecognizeTextRequest" || { echo "LỖI: binary không tham chiếu Vision OCR"; exit 1; }
           du -sh "$APP_PATH"
           rm -rf Payload && mkdir Payload
           cp -R "$APP_PATH" Payload/
