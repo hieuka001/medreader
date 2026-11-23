@@ -1,0 +1,13 @@
+{
+  "appId": "com.hieuka001.medreader",
+  "appName": "MedReader",
+  "webDir": "web",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#0e1512"
+  },
+  "plugins": {
+    "CapacitorHttp": { "enabled": false }
+  }
+}

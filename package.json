@@ -1,0 +1,22 @@
+{
+  "name": "medreader",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MedReader — app đọc sách iOS (PDF/EPUB/TXT) tích hợp dịch Gemini kiểu MedGloss, OCR, highlight, ghi chú",
+  "scripts": {
+    "build:web": "node tools/build-web.mjs",
+    "sync:ios": "npm run build:web && npx cap sync ios",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.2.3",
+    "@capacitor/ios": "^6.2.3",
+    "jszip": "^3.10.1",
+    "pdfjs-dist": "^4.7.76",
+    "medreader-bridge": "file:plugins/medreader-bridge"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.3"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "medreader-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MedReader iOS bridge: OCR sách scan bằng Apple Vision (offline).",
+  "files": ["ios/Plugin", "MedreaderBridge.podspec"],
+  "capacitor": { "ios": { "src": "ios" } }
+}

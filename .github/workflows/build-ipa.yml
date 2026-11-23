@@ -1,0 +1,62 @@
+name: Build unsigned IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "plugins/**"
+      - "web-src/**"
+      - "package.json"
+      - "capacitor.config.json"
+      - ".github/workflows/build-ipa.yml"
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests (chặn build nếu test đỏ)
+        run: npm test
+      - name: Build web (đóng kèm trong app)
+        run: npm run build:web
+      - name: Sync Capacitor iOS (incl. pod install)
+        run: npx cap sync ios
+      - name: Build unsigned .app (iphoneos)
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App \
+            -configuration Release -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$GITHUB_WORKSPACE/build" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build
+      - name: Package + verify IPA
+        run: |
+          APP_PATH="$GITHUB_WORKSPACE/build/Build/Products/Release-iphoneos/App.app"
+          test -d "$APP_PATH" || { echo "App.app not found"; find "$GITHUB_WORKSPACE/build" -name "*.app" -maxdepth 6; exit 1; }
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP_PATH/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP_PATH/Info.plist"
+          echo "--- Kiểm tra web đóng kèm ---"
+          test -f "$APP_PATH/public/index.html" || { echo "LỖI: IPA thiếu public/index.html"; exit 1; }
+          grep -q "MedReader" "$APP_PATH/public/index.html" || { echo "LỖI: index.html không đúng app"; exit 1; }
+          test -f "$APP_PATH/public/vendor/pdf.min.mjs" || { echo "LỖI: thiếu pdf.js"; exit 1; }
+          test -f "$APP_PATH/public/lib/gloss.js" || { echo "LỖI: thiếu lib gloss"; exit 1; }
+          echo "--- Kiểm tra bridge OCR native trong binary ---"
+          strings "$APP_PATH/App" | grep -m1 "MedReaderBridge" || { echo "LỖI: binary không có MedReaderBridge"; exit 1; }
+          strings "$APP_PATH/App" | grep -m1 "OCR tiếng Việt cần iOS 16" || { echo "LỖI: binary không có ocrImage (Vision)"; exit 1; }
+          du -sh "$APP_PATH"
+          rm -rf Payload && mkdir Payload
+          cp -R "$APP_PATH" Payload/
+          zip -qry "MedReader-unsigned.ipa" Payload
+          ls -lh "MedReader-unsigned.ipa"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MedReader-unsigned-ipa
+          path: MedReader-unsigned.ipa
+          retention-days: 30

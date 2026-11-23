@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>MedReader — Đọc sách & Dịch Gemini</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <!-- ============ THƯ VIỆN ============ -->
+  <section id="view-library" class="view active">
+    <header class="topbar">
+      <div class="brand"><span class="brand-logo">📖</span><div><h1>MedReader</h1><p class="sub">Đọc sách · Dịch Gemini · OCR</p></div></div>
+      <button id="btn-settings" class="icon-btn" title="Cài đặt">⚙️</button>
+    </header>
+    <div class="lib-tools">
+      <input id="lib-search" type="search" placeholder="Tìm sách trong thư viện…">
+      <select id="lib-sort">
+        <option value="recent">Mới thêm</option>
+        <option value="title">Tên A–Z</option>
+        <option value="progress">Đang đọc dở</option>
+      </select>
+    </div>
+    <div id="lib-grid" class="lib-grid"></div>
+    <div id="lib-empty" class="empty" hidden>
+      <p>Chưa có sách nào.</p>
+      <p class="muted">Bấm nút ＋ để thêm sách PDF, EPUB hoặc TXT từ máy.</p>
+    </div>
+    <button id="btn-add" class="fab" title="Thêm sách">＋</button>
+    <input id="file-input" type="file" accept=".pdf,.epub,.txt" multiple hidden>
+  </section>
+
+  <!-- ============ TRÌNH ĐỌC ============ -->
+  <section id="view-reader" class="view">
+    <header class="topbar reader-bar">
+      <button id="btn-back" class="icon-btn">‹</button>
+      <div class="reader-title"><h2 id="reader-book-title">—</h2><p class="sub" id="reader-pos">—</p></div>
+      <button id="btn-toc" class="icon-btn" title="Mục lục">☰</button>
+      <button id="btn-search" class="icon-btn" title="Tìm trong sách">🔍</button>
+      <button id="btn-marks" class="icon-btn" title="Highlight & dấu trang">🔖</button>
+      <button id="btn-aa" class="icon-btn" title="Tuỳ chỉnh đọc">Aa</button>
+    </header>
+    <div id="ocr-banner" class="ocr-banner" hidden>
+      <span>📄 Trang này là bản scan (không có lớp chữ).</span>
+      <button id="btn-ocr-page">OCR trang này</button>
+      <button id="btn-ocr-all">OCR cả sách</button>
+      <button id="btn-ocr-open" hidden>Mở bản chữ OCR</button>
+    </div>
+    <div id="reader-scroll" class="reader-scroll"></div>
+    <div id="reader-progress"><div id="reader-progress-fill"></div></div>
+    <button id="btn-bubble" class="bubble-btn" title="Dịch Gemini">💬</button>
+  </section>
+</div>
+
+<!-- Thanh hành động khi bôi đen -->
+<div id="selbar" class="selbar" hidden>
+  <div class="selbar-quote" id="selbar-quote"></div>
+  <div class="selbar-row">
+    <button data-act="gloss" class="act primary">Dịch cụm</button>
+    <button data-act="full" class="act">Dịch trọn</button>
+    <button data-act="note" class="act">Ghi chú</button>
+    <button data-act="speak" class="act">Nghe</button>
+    <button data-act="copy" class="act">Chép</button>
+  </div>
+  <div class="selbar-row colors">
+    <span class="colors-label">Highlight:</span>
+    <button class="swatch" data-color="#ffe066" style="background:#ffe066"></button>
+    <button class="swatch" data-color="#a3e635" style="background:#a3e635"></button>
+    <button class="swatch" data-color="#7dd3fc" style="background:#7dd3fc"></button>
+    <button class="swatch" data-color="#f9a8d4" style="background:#f9a8d4"></button>
+    <button class="swatch" data-color="#fdba74" style="background:#fdba74"></button>
+  </div>
+</div>
+
+<!-- Bong bóng dịch -->
+<div id="bubble" class="bubble" hidden>
+  <div class="bubble-head">
+    <strong>Dịch Gemini</strong>
+    <div class="bubble-tabs">
+      <button id="tab-gloss" class="tab active">Cụm</button>
+      <button id="tab-full" class="tab">Trọn câu</button>
+    </div>
+    <button id="bubble-speak" class="icon-btn small" title="Nghe bản dịch">🔊</button>
+    <button id="bubble-close" class="icon-btn small">✕</button>
+  </div>
+  <div id="bubble-src" class="bubble-src"></div>
+  <textarea id="bubble-input" class="bubble-input" rows="3" placeholder="Dán câu cần dịch vào đây rồi bấm Dịch cụm…" hidden></textarea>
+  <button id="bubble-go" class="act primary wide" hidden>Dịch</button>
+  <div id="bubble-out" class="bubble-out"></div>
+</div>
+
+<!-- Panel trượt (mục lục / tìm kiếm / highlight / tuỳ chỉnh / cài đặt) -->
+<div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
+<aside id="sheet" class="sheet" hidden>
+  <div class="sheet-head"><h3 id="sheet-title">—</h3><button id="sheet-close" class="icon-btn small">✕</button></div>
+  <div id="sheet-body" class="sheet-body"></div>
+</aside>
+
+<div id="toast" class="toast" hidden></div>
+<div id="loading" class="loading" hidden><div class="spinner"></div><p id="loading-text">Đang tải…</p></div>
+
+<script src="vendor/jszip.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
