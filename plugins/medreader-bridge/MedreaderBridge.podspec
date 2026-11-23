@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.author = 'hieuka001'
   s.source = { :git => 'https://github.com/hieuka001/medreader', :tag => s.version.to_s }
   s.source_files = 'ios/Plugin/**/*.{swift,h,m}'
-  s.ios.deployment_target = '14.0'
+  s.ios.deployment_target = '13.0'
   s.static_framework = true
   s.dependency 'Capacitor'
   s.frameworks = 'Vision', 'UIKit'
